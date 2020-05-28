@@ -1,0 +1,8 @@
+type: Asset
+api_version: core/v2
+metadata:
+  name: sensu-webwhois
+  namespace: default
+spec:
+  sha512: 98f516fa73d5b15acd7ee501daf5c00283fad34ae23938d8cc006b095984fd64f331bf08ac04ef903576ac54f1ff6923ea131b03609700502eb41fe62427359c
+  url: https://github.com/DENICeG/sensu-webwhois/releases/download/v0.0.1/sensu-webwhois_v0.0.1_linux_amd64.tar.gz
