@@ -1,4 +1,4 @@
-# sensu-webhois Asset
+# sensu-webwhois Asset
 
 Creating releases for sensu is handled by GitHub Actions.
 
