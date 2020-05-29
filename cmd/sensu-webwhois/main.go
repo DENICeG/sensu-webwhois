@@ -38,6 +38,7 @@ func main() {
 	timeBegin := time.Now()
 	req, err := http.NewRequest("POST", "https://www.denic.de/webwhois/", postbody)
 	if err != nil {
+		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 		os.Exit(2)
@@ -47,6 +48,7 @@ func main() {
 	resp, err := http.DefaultClient.Do(req)
 	timeEnd := time.Since(timeBegin)
 	if err != nil {
+		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 		os.Exit(2)
@@ -58,7 +60,7 @@ func main() {
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			fmt.Printf(err)
+			log.Println(err)
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 			os.Exit(2)
