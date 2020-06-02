@@ -18,7 +18,7 @@ var (
 )
 
 func setAliasesViaWhiteflag() {
-	whiteflag.Alias("dom", "domain", "use the given domain for check order")
+	whiteflag.Alias("d", "domain", "use the given domain for check order")
 }
 
 func main() {
