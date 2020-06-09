@@ -13,46 +13,37 @@ import (
 )
 
 var (
-	domainToCheck   string
 	stringToLookFor string = "ist bereits registriert."
 )
-
-func setAliasesViaWhiteflag() {
-	whiteflag.Alias("d", "domain", "use the given domain for check order")
-}
 
 func main() {
 	log.SetOutput(os.Stderr)
 
-	// Parse commandline parameters
-
-	setAliasesViaWhiteflag()
+	whiteflag.Alias("d", "domain", "use the given domain for check order")
 	whiteflag.ParseCommandLine()
-	domainToCheck = whiteflag.GetString("domain")
+	domainToCheck := whiteflag.GetString("domain")
 
 	postString := fmt.Sprintf("lang=de&domain=%s&domainwhois_submit=Abfrage+starten", domainToCheck)
 	postbody := strings.NewReader(postString)
 
-	// body := strings.NewReader(`lang=de&domain=denic.de&domainwhois_submit=Abfrage+starten`)
-
-	timeBegin := time.Now()
 	req, err := http.NewRequest("POST", "https://www.denic.de/webwhois/", postbody)
 	if err != nil {
 		log.Println(err)
-		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
-		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
-		os.Exit(2)
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, time.Now().Unix())
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, time.Now().Unix())
+		os.Exit(3)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
+	timeBegin := time.Now()
 	resp, err := http.DefaultClient.Do(req)
-	timeEnd := time.Since(timeBegin)
 	if err != nil {
 		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 		os.Exit(2)
 	}
+	defer resp.Body.Close()
 
 	defer resp.Body.Close()
 
