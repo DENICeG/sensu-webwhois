@@ -45,7 +45,7 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	defer resp.Body.Close()
+	webwhoisResponseTime := time.Since(timeBegin).Milliseconds()
 
 	if resp.StatusCode == http.StatusOK {
 
@@ -60,14 +60,18 @@ func main() {
 
 		if strings.Contains(bodyString, stringToLookFor) {
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 1, timeBegin.Unix())
-			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", timeEnd.Milliseconds(), timeBegin.Unix())
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
 			os.Exit(0)
+		} else {
+			log.Printf("error: webwhois output did not contain '%s'", stringToLookFor)
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
+			os.Exit(2)
 		}
-
+	} else {
+		log.Println("error: HTTP status code was not 200")
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
+		os.Exit(2)
 	}
-
-	fmt.Printf("ERROR: HTTP Code was not 200")
-	fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
-	fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", timeEnd.Milliseconds(), timeBegin.Unix())
-	os.Exit(2)
 }
