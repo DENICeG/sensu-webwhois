@@ -4,5 +4,5 @@ metadata:
   name: sensu-webwhois
   namespace: default
 spec:
-  sha512: d3ee5c50c2bc4300c1f6a53e192db416bd1e018b782827c185a291d35d7074da650dd871c132cb9364f42ff1a20e0397dceaecb3e85ec3685764d907a0c0d7b7
-  url: https://github.com/DENICeG/sensu-webwhois/releases/download/v1.0.0/sensu-webwhois_v1.0.0_linux_amd64.tar.gz
+  sha512: 39e42af43c76c53ee391248cc5cb7a8a6de4bd9373a292aa19f0c9586d45ac351c2c4f0aec245a875ec4480d101c03abca68b640b016590cbcbfe46db2f0f615
+  url: https://github.com/DENICeG/sensu-webwhois/releases/download/v1.0.1/sensu-webwhois_v1.0.1_linux_amd64.tar.gz

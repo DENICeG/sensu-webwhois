@@ -31,7 +31,7 @@ func main() {
 		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, time.Now().Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, time.Now().Unix())
-		os.Exit(3)
+		os.Exit(2)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
