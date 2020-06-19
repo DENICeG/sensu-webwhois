@@ -31,6 +31,7 @@ func main() {
 		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, time.Now().Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, time.Now().Unix())
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 0, time.Now().Unix())
 		os.Exit(2)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -41,6 +42,7 @@ func main() {
 		log.Println(err)
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 0, time.Now().Unix())
 		os.Exit(2)
 	}
 	defer resp.Body.Close()
@@ -54,6 +56,7 @@ func main() {
 			log.Println(err)
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
 			os.Exit(2)
 		}
 		bodyString := string(bodyBytes)
@@ -61,17 +64,21 @@ func main() {
 		if strings.Contains(bodyString, stringToLookFor) {
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 1, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
 			os.Exit(0)
 		} else {
 			log.Printf("error: webwhois output did not contain '%s'", stringToLookFor)
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
+			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
 			os.Exit(2)
 		}
 	} else {
 		log.Println("error: HTTP status code was not 200")
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
+		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", resp.StatusCode, time.Now().Unix())
+
 		os.Exit(2)
 	}
 }
