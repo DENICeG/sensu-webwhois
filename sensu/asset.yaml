@@ -3,5 +3,5 @@ api_version: core/v2
 metadata:
   name: sensu-webwhois
 spec:
-  sha512: 2acdea9560e6ce548de1a5d77de6e438797de82bc9405a93c428b0ea3ee4a81850248951a63cb95dd5110062d615c51b10763bd36f600ac4b7990fa003e4276e
-  url: https://github.com/DENICeG/sensu-webwhois/releases/download/v1.2.0/sensu-webwhois_v1.2.0_linux_amd64.tar.gz
+  sha512: 49bd85fb75c437b318aacc699053a1ae2c2ea1ce53271e4636d3ef1c1458be0188777b5da54e7fe007e113a1a1679f91f62213bc4c686a65bc4c85e371f805d1
+  url: https://github.com/DENICeG/sensu-webwhois/releases/download/v1.2.1/sensu-webwhois_v1.2.1_linux_amd64.tar.gz

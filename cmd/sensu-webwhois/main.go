@@ -28,7 +28,7 @@ func main() {
 
 	req, err := http.NewRequest("POST", "https://www.denic.de/webwhois/", postbody)
 	if err != nil {
-		log.Println(err)
+		log.Printf("ERROR: %s\n\n", err.Error())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, time.Now().Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, time.Now().Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 0, time.Now().Unix())
@@ -39,7 +39,7 @@ func main() {
 	timeBegin := time.Now()
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println(err)
+		log.Printf("ERROR: %s\n\n", err.Error())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 0, time.Now().Unix())
@@ -53,7 +53,7 @@ func main() {
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Println(err)
+			log.Printf("ERROR: %s\n\n", err.Error())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
@@ -62,19 +62,20 @@ func main() {
 		bodyString := string(bodyBytes)
 
 		if strings.Contains(bodyString, stringToLookFor) {
+			log.Printf("OK: webwhois output contains '%s'\n\n", stringToLookFor)
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 1, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
 			os.Exit(0)
 		} else {
-			log.Printf("error: webwhois output did not contain '%s'", stringToLookFor)
+			log.Printf("ERROR: webwhois output did not contain '%s'\n\n", stringToLookFor)
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
 			fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", 200, time.Now().Unix())
 			os.Exit(2)
 		}
 	} else {
-		log.Println("error: HTTP status code was not 200")
+		log.Printf("ERROR: HTTP status code was not 200\n\n")
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.registered", 0, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.duration", webwhoisResponseTime, timeBegin.Unix())
 		fmt.Printf("%s %d %d\n", "sensu.webwhois.responsecode", resp.StatusCode, time.Now().Unix())
