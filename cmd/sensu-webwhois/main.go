@@ -28,6 +28,11 @@ func main() {
 
 	timeBegin := time.Now()
 
+	os.Setenv("HTTP_PROXY", "")
+	os.Setenv("HTTPS_PROXY", "")
+	os.Setenv("http_proxy", "")
+	os.Setenv("https_proxy", "")
+
 	req, err := http.NewRequest("POST", "https://www.denic.de/webwhois/", postbody)
 	if err != nil {
 		log.Printf("ERROR: %s\n\n", err.Error())
