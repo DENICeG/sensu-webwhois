@@ -16,9 +16,14 @@ var (
 	stringToLookFor = "ist bereits registriert"
 	timeBegin       = time.Now()
 	httpResp        *http.Response
+	fails           int
 )
 
 func main() {
+	run()
+}
+
+func run() {
 
 	var err error
 	log.SetOutput(os.Stderr)
@@ -46,7 +51,6 @@ func main() {
 	if err != nil {
 		printFailMetricsAndExit(err.Error())
 	}
-	defer httpResp.Body.Close()
 
 	webwhoisResponseTime := time.Since(timeBegin).Milliseconds()
 
@@ -66,9 +70,17 @@ func main() {
 	} else {
 		printFailMetricsAndExit("webwhois output did not contain", "'"+stringToLookFor+"'")
 	}
+
+	httpResp.Body.Close()
+	os.Exit(0)
 }
 
 func printFailMetricsAndExit(errors ...string) {
+
+	if fails < 3 {
+		fails++
+		run()
+	}
 
 	var statusCode int
 
