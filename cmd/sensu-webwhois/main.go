@@ -16,21 +16,25 @@ var (
 	stringToLookFor = "ist bereits registriert"
 	timeBegin       = time.Now()
 	httpResp        *http.Response
+	domainToCheck   string
 	fails           int
 )
 
 func main() {
+	whiteflag.Alias("d", "domain", "use the given domain for check order")
+	whiteflag.ParseCommandLine()
+	domainToCheck = whiteflag.GetString("domain")
+
 	run()
 }
 
 func run() {
-
 	var err error
 	log.SetOutput(os.Stderr)
 
-	whiteflag.Alias("d", "domain", "use the given domain for check order")
-	whiteflag.ParseCommandLine()
-	domainToCheck := whiteflag.GetString("domain")
+	if httpResp != nil {
+		httpResp.Body.Close() // nolint:errcheck
+	}
 
 	postString := fmt.Sprintf("lang=de&domain=%s&domainwhois_submit=Abfrage+starten", domainToCheck)
 	postBody := strings.NewReader(postString)
