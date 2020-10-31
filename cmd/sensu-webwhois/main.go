@@ -22,7 +22,6 @@ var (
 
 func main() {
 	whiteflag.Alias("d", "domain", "use the given domain for check order")
-	whiteflag.ParseCommandLine()
 	domainToCheck = whiteflag.GetString("domain")
 
 	run()
