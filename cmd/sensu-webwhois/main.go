@@ -64,10 +64,12 @@ func run() {
 
 	if strings.Contains(string(bodyBytes), stringToLookFor) {
 		log.Printf("OK: webwhois output contains '%s'\n\n", stringToLookFor)
-		fmt.Printf("extmon,service=%s %s=%d,%s=%d,%s=%d %d\n",
+		fmt.Printf("extmon,service=%s %s=%d,%s=%d,%s=%d,%s=%d,%s=%d %d\n",
 			"webwhois",
+			"available", 1,
 			"registered", 1,
 			"duration", webwhoisResponseTime,
+			"order", webwhoisResponseTime,
 			"responsecode", httpResp.StatusCode,
 			timeBegin.Unix())
 	} else {
@@ -100,10 +102,12 @@ func printFailMetricsAndExit(errors ...string) {
 
 	log.Printf("%s\n\n", errStr)
 
-	fmt.Printf("extmon,service=%s %s=%d,%s=%d,%s=%d %d\n",
+	fmt.Printf("extmon,service=%s %s=%d,%s=%d,%s=%d,%s=%d,%s=%d %d\n",
 		"webwhois",
+		"available", 0,
 		"registered", 0,
 		"duration", 0,
+		"order", 0,
 		"responsecode", statusCode,
 		timeBegin.Unix())
 
