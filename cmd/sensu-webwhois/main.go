@@ -30,6 +30,8 @@ func main() {
 func run() {
 	var err error
 	log.SetOutput(os.Stderr)
+	log.SetPrefix("UTC ")
+	log.SetFlags(log.Ltime | log.Lmsgprefix | log.LUTC)
 
 	if httpResp != nil {
 		httpResp.Body.Close() // nolint:errcheck
