@@ -1,13 +1,13 @@
 #!/bin/bash
 
 if [[ -z "$1" ]]; then 
-  echo "need tag/version in format v1.x.y"
+  echo "need tag/version in format v2.x.y"
   exit 1
 else
   TAG=$1
 fi
 
-CGO_ENABLED=0 go build -o bin/sensu-webwhois cmd/sensu-webwhois/main.go
+CGO_ENABLED=0 go build -o bin/sensu-webwhois ./cmd/sensu-webwhois
 tar czf sensu-webwhois_${TAG}_linux_amd64.tar.gz bin/
 
 sha512sum sensu-webwhois_${TAG}_linux_amd64.tar.gz > sensu-webwhois_${TAG}_sha512_checksums.txt

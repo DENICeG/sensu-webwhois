@@ -17,12 +17,19 @@ var (
 	timeBegin       = time.Now()
 	httpResp        *http.Response
 	domainToCheck   string
+	webWhoisURL     string
 	fails           int
 )
 
 func main() {
 	whiteflag.Alias("d", "domain", "use the given domain for check order")
+	whiteflag.Alias("a", "address", "full webwhois url")
 	domainToCheck = whiteflag.GetString("domain")
+	if whiteflag.FlagPresent("address") {
+		webWhoisURL = whiteflag.GetString("address")
+	} else {
+		webWhoisURL = "https://www.denic.de/webwhois/"
+	}
 
 	run()
 }
@@ -45,7 +52,7 @@ func run() {
 	os.Setenv("http_proxy", "")
 	os.Setenv("https_proxy", "")
 
-	httpReq, err := http.NewRequest("POST", "https://www.denic.de/webwhois/", postBody)
+	httpReq, err := http.NewRequest("POST", webWhoisURL, postBody)
 	if err != nil {
 		printFailMetricsAndExit(err.Error())
 	}
