@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io"
 	"log"
@@ -13,12 +14,13 @@ import (
 )
 
 var (
-	stringToLookFor = "ist bereits registriert"
-	timeBegin       = time.Now()
-	httpResp        *http.Response
-	domainToCheck   string
-	webWhoisURL     string
-	fails           int
+	stringToLookFor  = "ist bereits registriert"
+	timeBegin        = time.Now()
+	httpResp         *http.Response
+	domainToCheck    string
+	webWhoisURL      string
+	webWhoisInsecure bool
+	fails            int
 )
 
 func main() {
@@ -30,6 +32,7 @@ func main() {
 	} else {
 		webWhoisURL = "https://www.denic.de/webwhois/"
 	}
+	webWhoisInsecure = whiteflag.FlagPresent("insecure")
 
 	run()
 }
@@ -62,7 +65,14 @@ func run() {
 
 	httpReq.URL.RawQuery = domainQuery.Encode()
 
-	httpResp, err = http.DefaultClient.Do(httpReq)
+	httpClient := http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: webWhoisInsecure,
+			},
+		},
+	}
+	httpResp, err = httpClient.Do(httpReq)
 	if err != nil {
 		printFailMetricsAndExit(err.Error())
 	}
