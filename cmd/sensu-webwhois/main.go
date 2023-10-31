@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -44,20 +45,23 @@ func run() {
 		httpResp.Body.Close() // nolint:errcheck
 	}
 
-	postString := fmt.Sprintf("lang=de&domain=%s&domainwhois_submit=Abfrage+starten", domainToCheck)
-	postBody := strings.NewReader(postString)
-
 	os.Setenv("HTTP_PROXY", "")
 	os.Setenv("HTTPS_PROXY", "")
 	os.Setenv("http_proxy", "")
 	os.Setenv("https_proxy", "")
 
-	httpReq, err := http.NewRequest("POST", webWhoisURL, postBody)
+	httpReq, err := http.NewRequest(http.MethodGet, webWhoisURL, nil)
 	if err != nil {
 		printFailMetricsAndExit(err.Error())
 	}
 
-	httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	domainQuery := httpReq.URL.Query()
+	domainQuery.Add("lang", "de")
+	domainQuery.Add("query", url.QueryEscape(domainToCheck))
+	domainQuery.Add("domain", url.QueryEscape(domainToCheck))
+	domainQuery.Add("domainwhois_submit", "Abfrage+starten")
+
+	httpReq.URL.RawQuery = domainQuery.Encode()
 
 	httpResp, err = http.DefaultClient.Do(httpReq)
 	if err != nil {
@@ -66,7 +70,7 @@ func run() {
 
 	webwhoisResponseTime := time.Since(timeBegin).Milliseconds()
 
-	bodyBytes, err := ioutil.ReadAll(httpResp.Body)
+	bodyBytes, err := io.ReadAll(httpResp.Body)
 	if err != nil {
 		printFailMetricsAndExit(err.Error())
 	}
