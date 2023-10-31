@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -57,8 +56,8 @@ func run() {
 
 	domainQuery := httpReq.URL.Query()
 	domainQuery.Add("lang", "de")
-	domainQuery.Add("query", url.QueryEscape(domainToCheck))
-	domainQuery.Add("domain", url.QueryEscape(domainToCheck))
+	domainQuery.Add("query", domainToCheck)
+	domainQuery.Add("domain", domainToCheck)
 	domainQuery.Add("domainwhois_submit", "Abfrage+starten")
 
 	httpReq.URL.RawQuery = domainQuery.Encode()
