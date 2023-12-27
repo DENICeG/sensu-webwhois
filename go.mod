@@ -1,5 +1,5 @@
 module github.com/DENICeG/sensu-webwhois/v2
 
-go 1.15
+go 1.19
 
-require github.com/danielb42/whiteflag v1.2.6
+require github.com/spf13/pflag v1.0.5
